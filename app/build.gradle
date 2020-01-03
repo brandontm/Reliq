@@ -25,6 +25,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 dependencies {
@@ -32,6 +39,7 @@ dependencies {
 
     def nav_version = "2.1.0"
     def dagger_version = "2.25.4"
+    def material_version = "1.2.0-alpha03"
 
 
     // Dagger
@@ -40,6 +48,9 @@ dependencies {
     implementation "com.google.dagger:dagger:$dagger_version"
     implementation "com.google.dagger:dagger-android:$dagger_version"
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
+
+    // Material Design
+    implementation "com.google.android.material:material:$material_version"
 
     // Jetpack Components
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"

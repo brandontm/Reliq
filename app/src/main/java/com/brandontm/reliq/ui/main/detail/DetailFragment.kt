@@ -22,6 +22,8 @@ class DetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.detail_fragment, container, false)
+
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -29,5 +31,7 @@ class DetailFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(DetailViewModel::class.java)
         // TODO: Use the ViewModel
     }
+
+
 
 }
