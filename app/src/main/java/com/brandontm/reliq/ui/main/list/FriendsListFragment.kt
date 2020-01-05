@@ -32,8 +32,7 @@ class FriendsListFragment : BaseFragment() {
     }
 
     fun navigateToDetail() {
-        viewModel.saveUser()
-
-        viewModel.getUser()
+        val action = FriendsListFragmentDirections.actionMainFragmentToDetailFragment()
+        this.findNavController().navigate(action)
     }
 }
