@@ -2,6 +2,8 @@ package com.brandontm.reliq.di.application
 
 import android.app.Application
 import com.brandontm.reliq.ReliqApp
+import com.brandontm.reliq.data.db.DbModule
+import com.brandontm.reliq.data.repository.RepositoryModule
 import com.brandontm.reliq.di.activity.ActivityBuildersModule
 import com.brandontm.reliq.di.main.MainModule
 import com.brandontm.reliq.di.viewModel.ViewModelFactoryModule
@@ -17,7 +19,9 @@ import javax.inject.Singleton
     ApplicationModule::class,
     AndroidSupportInjectionModule::class,
     ViewModelFactoryModule::class,
-    ActivityBuildersModule::class
+    ActivityBuildersModule::class,
+    DbModule::class,
+    RepositoryModule::class
 ])
 interface ApplicationComponent : AndroidInjector<ReliqApp> {
     @Component.Factory
