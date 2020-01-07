@@ -42,6 +42,7 @@ dependencies {
     def room_version = "2.2.3"
     def material_version = "1.2.0-alpha03"
     def moshi_version = "1.9.2"
+    def lifecycle_version = "2.1.0"
 
 
     // Dagger
@@ -54,13 +55,16 @@ dependencies {
     // Material Design
     implementation "com.google.android.material:material:$material_version"
 
-    // Jetpack Components
+    // Navigation Component
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0'
+
+    //Lifecycle component
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
     // Room
     implementation "androidx.room:room-runtime:$room_version"
@@ -68,8 +72,9 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
 
-    // RxKotlin
+    // RxJava 2
     implementation "io.reactivex.rxjava2:rxkotlin:2.4.0"
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
 
     // Moshi
     implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"

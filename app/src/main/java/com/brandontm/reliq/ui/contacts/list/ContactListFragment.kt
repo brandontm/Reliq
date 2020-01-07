@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.brandontm.reliq.R
 import com.brandontm.reliq.base.BaseFragment
 import com.brandontm.reliq.di.viewModel.ViewModelProviderFactory
@@ -27,6 +29,17 @@ class ContactListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = ViewModelProviders.of(this, vmProviderFactory)
             .get(ContactListViewModel::class.java)
+
+
+        val adapter = ContactListAdapter()
+        rv_contacts.layoutManager = LinearLayoutManager(context)
+        rv_contacts.adapter = adapter
+
+        viewModel.contacts.observe(this) {
+            adapter.updateItems(it)
+        }
+
+        viewModel.retrieveContacts()
 
         btnNext.setOnClickListener { navigateToDetail() }
     }

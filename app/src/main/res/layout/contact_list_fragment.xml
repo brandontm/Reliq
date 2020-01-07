@@ -14,13 +14,14 @@
         android:background="#F3F3F3">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="409dp"
-            android:layout_height="681dp"
+            android:id="@+id/rv_contacts"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/btnNext"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/layout_contact_card"/>
+            tools:listitem="@layout/layout_contact_card" />
 
         <Button
             android:id="@+id/btnNext"
