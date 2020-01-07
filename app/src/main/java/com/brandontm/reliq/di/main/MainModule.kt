@@ -13,10 +13,10 @@ import dagger.multibindings.IntoMap
 abstract class MainModule {
 
     @ContributesAndroidInjector
-    internal abstract fun contributesFriendsListFragment(): ContactListFragment
+    internal abstract fun contributesContactListFragment(): ContactListFragment
 
     @Binds
     @IntoMap
     @ViewModelKey(ContactListViewModel::class)
-    internal abstract fun bindFriendsListViewModel(contactListViewModel: ContactListViewModel): ViewModel
+    internal abstract fun bindContactListViewModel(contactListViewModel: ContactListViewModel): ViewModel
 }
