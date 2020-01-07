@@ -10,7 +10,9 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class ContactListViewModel @Inject constructor(val userRepository: UserRepository) : BaseViewModel() {
+class ContactListViewModel @Inject constructor(private val userRepository: UserRepository)
+    : BaseViewModel() {
+
     val contacts: MutableLiveData<List<Contact>> = MutableLiveData()
 
     fun retrieveContacts() {

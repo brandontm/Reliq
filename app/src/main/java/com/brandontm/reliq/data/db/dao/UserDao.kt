@@ -14,9 +14,6 @@ interface UserDao {
     @Query("SELECT * FROM user LIMIT 1")
     fun getUser(): Maybe<User>
 
-    @Query("SELECT * FROM user LIMIT 1")
-    fun getUserSync(): Maybe<User>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveUser(user: User): Completable
 }

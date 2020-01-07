@@ -31,6 +31,13 @@ class ContactListFragment : BaseFragment() {
             .get(ContactListViewModel::class.java)
 
 
+        setupContactsRecyclerView()
+        viewModel.retrieveContacts()
+
+        btnNext.setOnClickListener { navigateToDetail() }
+    }
+
+    private fun setupContactsRecyclerView() {
         val adapter = ContactListAdapter()
         rv_contacts.layoutManager = LinearLayoutManager(context)
         rv_contacts.adapter = adapter
@@ -38,13 +45,9 @@ class ContactListFragment : BaseFragment() {
         viewModel.contacts.observe(this) {
             adapter.updateItems(it)
         }
-
-        viewModel.retrieveContacts()
-
-        btnNext.setOnClickListener { navigateToDetail() }
     }
 
-    fun navigateToDetail() {
+    private fun navigateToDetail() {
         val action = ContactListFragmentDirections.actionMainFragmentToDetailFragment()
         this.findNavController().navigate(action)
     }
