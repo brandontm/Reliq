@@ -1,4 +1,4 @@
-package com.brandontm.reliq.ui.main.detail
+package com.brandontm.reliq.ui.contacts.detail
 
 import androidx.lifecycle.ViewModel
 
