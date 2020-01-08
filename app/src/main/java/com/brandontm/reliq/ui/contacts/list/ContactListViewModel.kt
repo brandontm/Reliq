@@ -26,26 +26,6 @@ class ContactListViewModel @Inject constructor(private val userRepository: UserR
         initSession()
     }
 
-    fun initSession() {
-        userRepository.getUser()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-                onSuccess = {
-                    user.value = it
-                },
-                onComplete = {
-
-                    createSession()
-
-                },
-                onError = {
-                    Log.e(TAG, "Error retrieving user", it)
-                }
-            )
-            .addTo(disposables)
-    }
-
     fun retrieveContacts() {
         userRepository.getContacts()
             .subscribeOn(Schedulers.io())

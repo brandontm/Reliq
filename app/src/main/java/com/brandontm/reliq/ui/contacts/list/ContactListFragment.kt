@@ -48,15 +48,21 @@ class ContactListFragment : BaseFragment() {
 
                 when(it) {
                     is Result.Success -> {
+                        if(it.data.isEmpty()) {
+                            hideContactList()
+                        } else {
+                            showContactList()
+                        }
+
                         adapter.updateItems(it.data)
                     }
                 }
-
             }
 
             btn_next.setOnClickListener { navigateToDetail() }
         }
     }
+
 
     private fun setupContactsRecyclerView() {
         rv_contacts.layoutManager = LinearLayoutManager(context)
@@ -65,6 +71,16 @@ class ContactListFragment : BaseFragment() {
         swipe_contacts_refresh.setOnRefreshListener {
             viewModel.retrieveContacts()
         }
+    }
+
+    private fun showContactList() {
+        rv_contacts.visibility = View.VISIBLE
+        empty_contact_list_view.visibility = View.GONE
+    }
+
+    private fun hideContactList() {
+        rv_contacts.visibility = View.GONE
+        empty_contact_list_view.visibility = View.VISIBLE
     }
 
     private fun navigateToDetail() {
