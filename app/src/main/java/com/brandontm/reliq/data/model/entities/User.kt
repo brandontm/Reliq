@@ -12,6 +12,5 @@ data class User constructor(
     @PrimaryKey
     val _id: String,
     var name: String = "",
-    var age: Int = 0,
     @TypeConverters(ContactsConverter::class)
-    var contacts: List<Contact>?)
+    var contacts: List<Contact>)

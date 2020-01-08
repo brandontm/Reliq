@@ -6,16 +6,16 @@
     app:startDestination="@id/mainFragment">
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.brandontm.reliq.ui.main.list.FriendsListFragment"
+        android:name="com.brandontm.reliq.ui.contacts.list.ContactListFragment"
         android:label="Reliq"
-        tools:layout="@layout/friends_list_fragment">
+        tools:layout="@layout/contact_list_fragment">
         <action
             android:id="@+id/action_mainFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.brandontm.reliq.ui.main.detail.DetailFragment"
+        android:name="com.brandontm.reliq.ui.contacts.detail.DetailFragment"
         android:label="Detail"
         tools:layout="@layout/detail_fragment" />
 </navigation>
