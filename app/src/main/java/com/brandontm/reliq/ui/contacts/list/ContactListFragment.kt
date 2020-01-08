@@ -10,6 +10,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.brandontm.reliq.R
 import com.brandontm.reliq.base.BaseFragment
+import com.brandontm.reliq.data.model.entities.Contact
+import com.brandontm.reliq.data.model.entities.Result
+import com.brandontm.reliq.data.model.entities.User
 import com.brandontm.reliq.di.viewModel.ViewModelProviderFactory
 import kotlinx.android.synthetic.main.contact_list_fragment.*
 import javax.inject.Inject
@@ -21,6 +24,9 @@ class ContactListFragment : BaseFragment() {
 
     private lateinit var viewModel: ContactListViewModel
 
+    private val adapter = ContactListAdapter()
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.contact_list_fragment, container, false)
@@ -31,19 +37,33 @@ class ContactListFragment : BaseFragment() {
             .get(ContactListViewModel::class.java)
 
 
-        setupContactsRecyclerView()
-        viewModel.retrieveContacts()
 
-        btnNext.setOnClickListener { navigateToDetail() }
+        viewModel.user.observe(this) { // TODO: Move session to other activity/fragment
+            setupContactsRecyclerView()
+
+            viewModel.retrieveContacts()
+
+            viewModel.contacts.observe(this) {
+                swipe_contacts_refresh.isRefreshing = (it is Result.Loading)
+
+                when(it) {
+                    is Result.Success -> {
+                        adapter.updateItems(it.data)
+                    }
+                }
+
+            }
+
+            btn_next.setOnClickListener { navigateToDetail() }
+        }
     }
 
     private fun setupContactsRecyclerView() {
-        val adapter = ContactListAdapter()
         rv_contacts.layoutManager = LinearLayoutManager(context)
         rv_contacts.adapter = adapter
 
-        viewModel.contacts.observe(this) {
-            adapter.updateItems(it)
+        swipe_contacts_refresh.setOnRefreshListener {
+            viewModel.retrieveContacts()
         }
     }
 

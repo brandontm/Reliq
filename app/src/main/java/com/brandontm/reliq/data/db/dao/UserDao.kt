@@ -1,12 +1,10 @@
 package com.brandontm.reliq.data.db.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.brandontm.reliq.data.model.entities.User
 import io.reactivex.Completable
 import io.reactivex.Maybe
+import io.reactivex.Single
 
 @Dao
 interface UserDao {
@@ -15,5 +13,8 @@ interface UserDao {
     fun getUser(): Maybe<User>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveUser(user: User): Completable
+    fun saveUser(user: User): Single<Long>
+
+    @Delete
+    fun deleteUser(user: User): Single<Int>
 }
