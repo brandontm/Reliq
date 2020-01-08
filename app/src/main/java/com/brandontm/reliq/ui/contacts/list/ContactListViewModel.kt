@@ -91,9 +91,28 @@ class ContactListViewModel @Inject constructor(private val userRepository: UserR
             .addTo(disposables)
     }
 
+    private fun initSession() {
+        userRepository.getUser()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onSuccess = {
+                    user.value = it
+                },
+                onComplete = {
+
+                    createSession()
+
+                },
+                onError = {
+                    Log.e(TAG, "Error retrieving user", it)
+                }
+            )
+            .addTo(disposables)
+    }
 
     private fun createSession() {
-        val insertUser = User("user", "User", 30, listOf())
+        val insertUser = User("user", "User", listOf())
         userRepository.saveUser(insertUser)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

@@ -6,5 +6,4 @@ import com.squareup.moshi.JsonClass
 data class Contact constructor(
     val id: String,
     var name: String = "",
-    var age: Int = 0,
     var score: Int = 0)
