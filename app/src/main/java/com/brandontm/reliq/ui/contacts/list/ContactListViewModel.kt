@@ -17,7 +17,6 @@
 
 package com.brandontm.reliq.ui.contacts.list
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.brandontm.reliq.base.BaseViewModel
 import com.brandontm.reliq.data.model.entities.Contact
@@ -28,12 +27,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 import javax.inject.Inject
 
 class ContactListViewModel @Inject constructor(private val userRepository: UserRepository)
     : BaseViewModel() {
-
-    private val TAG: String = ContactListViewModel::class.java.simpleName
 
     val user: MutableLiveData<User> = MutableLiveData()
     val contacts: MutableLiveData<Result<List<Contact>>> = MutableLiveData()
@@ -52,7 +50,7 @@ class ContactListViewModel @Inject constructor(private val userRepository: UserR
                     contacts.value = it
                 },
                 onError = {
-                    Log.e(TAG, "Error retrieving contacts", it)
+                    Timber.e("Error retrieving contacts", it)
                 }
             )
             .addTo(disposables)
@@ -67,7 +65,7 @@ class ContactListViewModel @Inject constructor(private val userRepository: UserR
                     saveContactsStatus.value = true
                 },
                 onError = {
-                    Log.e(TAG, "Error saving user $user", it)
+                    Timber.e("Error saving user $user", it)
                 }
             )
             .addTo(disposables)
@@ -82,7 +80,7 @@ class ContactListViewModel @Inject constructor(private val userRepository: UserR
                     saveContactsStatus.value = true
                 },
                 onError = {
-                    Log.e(TAG, "Error deleting user $user", it)
+                    Timber.e("Error deleting user $user", it)
                 }
             )
             .addTo(disposables)
@@ -102,7 +100,7 @@ class ContactListViewModel @Inject constructor(private val userRepository: UserR
 
                 },
                 onError = {
-                    Log.e(TAG, "Error retrieving user", it)
+                    Timber.e("Error retrieving user", it)
                 }
             )
             .addTo(disposables)
@@ -118,7 +116,7 @@ class ContactListViewModel @Inject constructor(private val userRepository: UserR
                     user.value = insertUser
                 },
                 onError = {
-                    Log.e(TAG, "Error saving user $insertUser", it)
+                    Timber.e("Error saving user $insertUser", it)
                 }
             )
             .addTo(disposables)

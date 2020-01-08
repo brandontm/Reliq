@@ -30,6 +30,7 @@ import com.brandontm.reliq.base.BaseFragment
 import com.brandontm.reliq.data.model.entities.Result
 import com.brandontm.reliq.di.viewModel.ViewModelProviderFactory
 import kotlinx.android.synthetic.main.contact_list_fragment.*
+import timber.log.Timber
 import javax.inject.Inject
 
 class ContactListFragment : BaseFragment() {
@@ -54,6 +55,7 @@ class ContactListFragment : BaseFragment() {
 
 
         viewModel.user.observe(this) { // TODO: Move session to other activity/fragment
+            Timber.d("Working")
             setupContactsRecyclerView()
 
             viewModel.retrieveContacts()

@@ -18,11 +18,11 @@
 package com.brandontm.reliq
 
 import android.app.Application
-import com.brandontm.reliq.di.application.ApplicationComponent
 import com.brandontm.reliq.di.application.DaggerApplicationComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
+import timber.log.Timber
 import javax.inject.Inject
 
 class ReliqApp : Application(), HasAndroidInjector {
@@ -31,12 +31,10 @@ class ReliqApp : Application(), HasAndroidInjector {
 
     override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 
-    companion object {
-        lateinit var graph: ApplicationComponent
-    }
-
     override fun onCreate() {
         super.onCreate()
         DaggerApplicationComponent.factory().create(this).inject(this)
+
+        Timber.plant(Timber.DebugTree())
     }
 }
