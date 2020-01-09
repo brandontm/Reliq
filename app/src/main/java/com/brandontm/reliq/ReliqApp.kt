@@ -19,6 +19,7 @@ package com.brandontm.reliq
 
 import android.app.Application
 import com.brandontm.reliq.di.application.DaggerApplicationComponent
+import com.facebook.stetho.Stetho
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -36,5 +37,6 @@ class ReliqApp : Application(), HasAndroidInjector {
         DaggerApplicationComponent.factory().create(this).inject(this)
 
         Timber.plant(Timber.DebugTree())
+        Stetho.initializeWithDefaults(this)
     }
 }
