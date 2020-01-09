@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "123209179530",
+    "firebase_url": "https://reliq-7418d.firebaseio.com",
+    "project_id": "reliq-7418d",
+    "storage_bucket": "reliq-7418d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123209179530:android:07d2673d59f0e3e0862873",
+        "android_client_info": {
+          "package_name": "com.brandontm.reliq"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123209179530-5acu3olmunkf4uie7v72gqgq8n9s78j0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEAfLWktYke7wuDF9VTLG05i4l2IQnbDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123209179530-5acu3olmunkf4uie7v72gqgq8n9s78j0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

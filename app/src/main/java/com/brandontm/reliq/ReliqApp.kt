@@ -19,10 +19,13 @@ package com.brandontm.reliq
 
 import android.app.Application
 import com.brandontm.reliq.di.application.DaggerApplicationComponent
+import com.crashlytics.android.Crashlytics
+import com.crashlytics.android.core.CrashlyticsCore
 import com.facebook.stetho.Stetho
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
+import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -36,7 +39,15 @@ class ReliqApp : Application(), HasAndroidInjector {
         super.onCreate()
         DaggerApplicationComponent.factory().create(this).inject(this)
 
+        setupCrashlytics()
         Timber.plant(Timber.DebugTree())
         Stetho.initializeWithDefaults(this)
+    }
+
+    private fun setupCrashlytics() {
+        Fabric.with(this, Crashlytics.Builder().core(
+            CrashlyticsCore.Builder()
+                .disabled(BuildConfig.DEBUG)
+                .build()).build())
     }
 }
