@@ -21,4 +21,8 @@
         </activity>
     </application>
 
+    <meta-data
+        android:name="firebase_analytics_collection_deactivated"
+        android:value="@bool/FIREBASE_ANALYTICS_DEACTIVATED"/>
+
 </manifest>
