@@ -29,8 +29,8 @@ import com.brandontm.reliq.R
 import com.brandontm.reliq.base.BaseFragment
 import com.brandontm.reliq.data.model.entities.Result
 import com.brandontm.reliq.di.viewModel.ViewModelProviderFactory
+import com.brandontm.reliq.ui.contacts.add.AddContactDialogFragment
 import kotlinx.android.synthetic.main.contact_list_fragment.*
-import timber.log.Timber
 import javax.inject.Inject
 
 class ContactListFragment : BaseFragment() {
@@ -52,34 +52,52 @@ class ContactListFragment : BaseFragment() {
         viewModel = ViewModelProviders.of(this, vmProviderFactory)
             .get(ContactListViewModel::class.java)
 
-
-
         viewModel.user.observe(this) { // TODO: Move session to other activity/fragment
-            Timber.d("Working")
-            setupContactsRecyclerView()
-
             viewModel.retrieveContacts()
 
-            viewModel.contacts.observe(this) {
-                swipe_contacts_refresh.isRefreshing = (it is Result.Loading)
-
-                when(it) {
-                    is Result.Success -> {
-                        if(it.data.isEmpty()) {
-                            hideContactList()
-                        } else {
-                            showContactList()
-                        }
-
-                        adapter.updateItems(it.data)
-                    }
-                }
-            }
-
-            btn_next.setOnClickListener { navigateToDetail() }
+            setupViews()
+            loadObservers()
         }
     }
 
+    private fun loadObservers() {
+        viewModel.contacts.observe(this) {
+            swipe_contacts_refresh.isRefreshing = (it is Result.Loading)
+
+            when(it) {
+                is Result.Success -> {
+                    if(it.data.isEmpty()) {
+                        hideContactList()
+                    } else {
+                        showContactList()
+                    }
+
+                    adapter.updateItems(it.data)
+                }
+            }
+        }
+        viewModel.saveContactsStatus.observe(this) {
+            viewModel.retrieveContacts()
+        }
+    }
+
+    private fun setupViews() {
+        setupContactsRecyclerView()
+
+        btn_next.setOnClickListener { navigateToDetail() }
+        fab_add_contact.setOnClickListener {
+
+                fragmentManager?.run {
+                    val fragment = AddContactDialogFragment()
+                    fragment.setOnAddContactListener { contact ->
+                        viewModel.addContact(contact)
+                    }
+
+                    fragment.show(this, null)
+                }
+
+        }
+    }
 
     private fun setupContactsRecyclerView() {
         rv_contacts.layoutManager = LinearLayoutManager(context)

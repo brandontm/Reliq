@@ -28,6 +28,7 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 class ContactListViewModel @Inject constructor(private val userRepository: UserRepository)
@@ -50,7 +51,7 @@ class ContactListViewModel @Inject constructor(private val userRepository: UserR
                     contacts.value = it
                 },
                 onError = {
-                    Timber.e("Error retrieving contacts", it)
+                    Timber.e(it, "Error retrieving contacts")
                 }
             )
             .addTo(disposables)
@@ -65,7 +66,7 @@ class ContactListViewModel @Inject constructor(private val userRepository: UserR
                     saveContactsStatus.value = true
                 },
                 onError = {
-                    Timber.e("Error saving user $user", it)
+                    Timber.e(it, "Error saving user $user")
                 }
             )
             .addTo(disposables)
@@ -80,10 +81,17 @@ class ContactListViewModel @Inject constructor(private val userRepository: UserR
                     saveContactsStatus.value = true
                 },
                 onError = {
-                    Timber.e("Error deleting user $user", it)
+                    Timber.e(it, "Error deleting user $user")
                 }
             )
             .addTo(disposables)
+    }
+
+    fun addContact(contact: Contact) {
+        user.value?.let {
+            it.addContact(contact)
+            saveUser(it)
+        }
     }
 
     private fun initSession() {
@@ -100,14 +108,15 @@ class ContactListViewModel @Inject constructor(private val userRepository: UserR
 
                 },
                 onError = {
-                    Timber.e("Error retrieving user", it)
+                    Timber.e(it, "Error retrieving user")
                 }
             )
             .addTo(disposables)
     }
 
     private fun createSession() {
-        val insertUser = User("user", "User", listOf())
+        val id: String = UUID.randomUUID().toString()
+        val insertUser = User(id, "User", listOf())
         userRepository.saveUser(insertUser)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -116,7 +125,7 @@ class ContactListViewModel @Inject constructor(private val userRepository: UserR
                     user.value = insertUser
                 },
                 onError = {
-                    Timber.e("Error saving user $insertUser", it)
+                    Timber.e(it, "Error saving user $insertUser")
                 }
             )
             .addTo(disposables)

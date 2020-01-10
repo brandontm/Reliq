@@ -22,11 +22,9 @@ import com.brandontm.reliq.ReliqApp
 import com.brandontm.reliq.data.db.DbModule
 import com.brandontm.reliq.data.repository.RepositoryModule
 import com.brandontm.reliq.di.activity.ActivityBuildersModule
-import com.brandontm.reliq.di.main.MainModule
 import com.brandontm.reliq.di.viewModel.ViewModelFactoryModule
 import dagger.BindsInstance
 import dagger.Component
-import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
