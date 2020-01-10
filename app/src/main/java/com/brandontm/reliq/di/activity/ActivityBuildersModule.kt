@@ -17,9 +17,10 @@
 
 package com.brandontm.reliq.di.activity
 
-import com.brandontm.reliq.di.main.MainModule
 import com.brandontm.reliq.di.scopes.PerActivity
 import com.brandontm.reliq.ui.MainActivity
+import com.brandontm.reliq.ui.contacts.detail.ContactDetailModule
+import com.brandontm.reliq.ui.contacts.list.ContactListModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -27,6 +28,9 @@ import dagger.android.ContributesAndroidInjector
 abstract class ActivityBuildersModule {
 
     @PerActivity
-    @ContributesAndroidInjector(modules = [MainModule::class])
+    @ContributesAndroidInjector(modules = [
+        ContactListModule::class,
+        ContactDetailModule::class
+    ])
     abstract fun contributeMainActivity(): MainActivity
 }

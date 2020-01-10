@@ -18,8 +18,22 @@
 package com.brandontm.reliq.ui.contacts.detail
 
 import androidx.lifecycle.ViewModel
-import javax.inject.Inject
+import com.brandontm.reliq.di.scopes.PerFragment
+import com.brandontm.reliq.di.viewModel.ViewModelKey
+import dagger.Binds
+import dagger.Module
+import dagger.android.ContributesAndroidInjector
+import dagger.multibindings.IntoMap
 
-class DetailViewModel @Inject constructor(): ViewModel() {
-    // TODO: Implement the ViewModel
+@Module
+abstract class ContactDetailModule {
+    @ContributesAndroidInjector
+    @PerFragment
+    internal abstract fun contributesContactDetailFragment(): DetailFragment
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DetailViewModel::class)
+    @PerFragment
+    internal abstract fun bindContactDetailViewModel(contactListViewModel: DetailViewModel): ViewModel
 }
