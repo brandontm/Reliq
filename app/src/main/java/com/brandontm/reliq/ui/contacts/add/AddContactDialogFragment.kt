@@ -19,6 +19,7 @@ package com.brandontm.reliq.ui.contacts.add
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
@@ -33,7 +34,7 @@ class AddContactDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return MaterialAlertDialogBuilder(
-            requireContext(), R.style.ThemeOverlay_MaterialComponents_MaterialAlertDialog_Centered
+            requireContext(), R.style.ThemeOverlay_MaterialComponents_MaterialAlertDialog
         ).setTitle("Add Contact")
             .setView(R.layout.add_contact_dialog_fragment)
             .create()
@@ -41,6 +42,8 @@ class AddContactDialogFragment : DialogFragment() {
 
     override fun onResume() {
         super.onResume()
+        showKeyboard()
+
         dialog?.findViewById<MaterialButton>(R.id.btn_add_contact)?.setOnClickListener {
             val id: String = UUID.randomUUID().toString()
             val name: String? = dialog?.findViewById<TextView>(R.id.txt_contact_name)?.text?.toString()
@@ -65,5 +68,11 @@ class AddContactDialogFragment : DialogFragment() {
 
     fun setOnAddContactListener(onAddContact: (contact: Contact) -> Unit) {
         listener = onAddContact
+    }
+
+    private fun showKeyboard() {
+        val window = dialog?.window
+        window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
+        window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
     }
 }

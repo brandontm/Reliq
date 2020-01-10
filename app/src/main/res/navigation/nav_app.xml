@@ -16,6 +16,10 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.brandontm.reliq.ui.contacts.detail.DetailFragment"
-        android:label="Detail"
-        tools:layout="@layout/detail_fragment" />
+        android:label="Contact Detail"
+        tools:layout="@layout/detail_fragment">
+        <argument
+            android:name="contact"
+            app:argType="com.brandontm.reliq.data.model.entities.Contact" />
+    </fragment>
 </navigation>

@@ -27,6 +27,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.brandontm.reliq.R
 import com.brandontm.reliq.base.BaseFragment
+import com.brandontm.reliq.data.model.entities.Contact
 import com.brandontm.reliq.data.model.entities.Result
 import com.brandontm.reliq.di.viewModel.ViewModelProviderFactory
 import com.brandontm.reliq.ui.contacts.add.AddContactDialogFragment
@@ -84,7 +85,6 @@ class ContactListFragment : BaseFragment() {
     private fun setupViews() {
         setupContactsRecyclerView()
 
-        btn_next.setOnClickListener { navigateToDetail() }
         fab_add_contact.setOnClickListener {
 
                 fragmentManager?.run {
@@ -101,11 +101,15 @@ class ContactListFragment : BaseFragment() {
 
     private fun setupContactsRecyclerView() {
         rv_contacts.layoutManager = LinearLayoutManager(context)
-        rv_contacts.adapter = adapter
-
+        adapter.onContactSelected = { contact ->
+            navigateToDetail(contact)
+        }
         swipe_contacts_refresh.setOnRefreshListener {
             viewModel.retrieveContacts()
         }
+
+
+        rv_contacts.adapter = adapter
     }
 
     private fun showContactList() {
@@ -118,8 +122,8 @@ class ContactListFragment : BaseFragment() {
         empty_contact_list_view.visibility = View.VISIBLE
     }
 
-    private fun navigateToDetail() {
-        val action = ContactListFragmentDirections.actionMainFragmentToDetailFragment()
+    private fun navigateToDetail(contact: Contact) {
+        val action = ContactListFragmentDirections.actionMainFragmentToDetailFragment(contact)
         this.findNavController().navigate(action)
     }
 }

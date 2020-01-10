@@ -26,6 +26,7 @@ import com.brandontm.reliq.data.model.entities.Contact
 import kotlinx.android.synthetic.main.layout_contact_card.view.*
 
 class ContactListAdapter : RecyclerView.Adapter<ContactListAdapter.ViewHolder>() {
+    var onContactSelected: ((contact: Contact) -> Unit)? = null
     private var items = mutableListOf<Contact>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,6 +38,9 @@ class ContactListAdapter : RecyclerView.Adapter<ContactListAdapter.ViewHolder>()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder.itemView) {
+            card_contact.setOnClickListener {
+                onContactSelected?.invoke(items[position])
+            }
             lbl_contact_name.text = items[position].name
             lbl_contact_score.text = "${items[position].score} <3"
         }

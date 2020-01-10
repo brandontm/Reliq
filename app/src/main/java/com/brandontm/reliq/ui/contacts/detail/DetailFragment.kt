@@ -18,15 +18,25 @@
 package com.brandontm.reliq.ui.contacts.detail
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.navArgs
 import com.brandontm.reliq.R
+import com.brandontm.reliq.base.BaseFragment
+import com.brandontm.reliq.di.viewModel.ViewModelProviderFactory
+import com.brandontm.reliq.ui.contacts.list.ContactListViewModel
+import kotlinx.android.synthetic.main.detail_fragment.*
+import javax.inject.Inject
 
-class DetailFragment : Fragment() {
-    private lateinit var viewModel: DetailViewModel
+class DetailFragment : BaseFragment() {
+    @Inject
+    lateinit var viewModelProvider: ViewModelProviderFactory
+
+    private lateinit var viewModel: ContactListViewModel
+
+    private val args: DetailFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,10 +45,10 @@ class DetailFragment : Fragment() {
         return inflater.inflate(R.layout.detail_fragment, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewModel = ViewModelProviders.of(this, viewModelProvider)
+            .get(ContactListViewModel::class.java)
+
+        txt_contact_name.setText(args.contact.name)
     }
-
-
-
 }
