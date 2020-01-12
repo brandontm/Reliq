@@ -26,6 +26,8 @@
                 android:id="@+id/rv_contacts"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="88dp"
                 tools:listitem="@layout/layout_contact_card"
                 tools:visibility="invisible" />
 

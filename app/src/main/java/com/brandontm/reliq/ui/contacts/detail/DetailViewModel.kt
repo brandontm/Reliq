@@ -17,9 +17,57 @@
 
 package com.brandontm.reliq.ui.contacts.detail
 
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import com.brandontm.reliq.base.BaseViewModel
+import com.brandontm.reliq.data.model.entities.Contact
+import com.brandontm.reliq.data.repository.UserRepository
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 import javax.inject.Inject
 
-class DetailViewModel @Inject constructor(): ViewModel() {
-    // TODO: Implement the ViewModel
+class DetailViewModel @Inject constructor(private val userRepository: UserRepository): BaseViewModel() {
+    val updateContactStatus: MutableLiveData<Boolean> = MutableLiveData()
+
+    fun updateContact(contact: Contact) {
+        userRepository.getUser()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onSuccess = { user ->
+                    val contactToUpdate: Contact = user.contacts.first { it.id == contact.id }
+                    if(contactToUpdate == contact) {
+                        return@subscribeBy
+                    }
+
+                    val contactsEditable = user.contacts as MutableList<Contact>
+
+                    contactsEditable[user.contacts.indexOf(contactToUpdate)] = contact
+                    user.contacts = contactsEditable
+
+                    userRepository.saveUser(user)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeBy(
+                            onSuccess = {
+                                updateContactStatus.value = true
+                            },
+                            onError = {
+                                Timber.e(it, "Error updating contact \"$contact\" from user \"$user\"")
+                                updateContactStatus.value = false
+                            }
+                        )
+                        .addTo(disposables)
+                },
+                onError = {
+                    Timber.e(it, "Error getting user while updating contact \"$contact\"")
+                    updateContactStatus.value = false
+                }
+            )
+            .addTo(disposables)
+    }
+
+
 }

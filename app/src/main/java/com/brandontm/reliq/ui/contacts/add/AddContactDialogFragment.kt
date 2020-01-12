@@ -21,12 +21,13 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.WindowManager
 import android.widget.TextView
-import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
 import com.brandontm.reliq.R
 import com.brandontm.reliq.data.model.entities.Contact
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputLayout
 import java.util.*
 
 class AddContactDialogFragment : DialogFragment() {
@@ -44,14 +45,17 @@ class AddContactDialogFragment : DialogFragment() {
         super.onResume()
         showKeyboard()
 
-        dialog?.findViewById<MaterialButton>(R.id.btn_add_contact)?.setOnClickListener {
+        val btnAddContact = dialog?.findViewById<MaterialButton>(R.id.btn_add_contact)
+        val btnCancel = dialog?.findViewById<MaterialButton>(R.id.btn_cancel)
+        val inputContactName = dialog?.findViewById<TextInputLayout>(R.id.input_contact_name)
+        val txtContactName = dialog?.findViewById<TextView>(R.id.txt_contact_name)
+
+        btnAddContact?.setOnClickListener {
             val id: String = UUID.randomUUID().toString()
-            val name: String? = dialog?.findViewById<TextView>(R.id.txt_contact_name)?.text?.toString()
+            val name: String? = txtContactName?.text?.toString()
             if(name.isNullOrBlank()) {
-                Toast.makeText(
-                    requireContext(),
-                    R.string.warning_no_name_provided, Toast.LENGTH_SHORT
-                ).show()
+                inputContactName?.error =
+                    getString(R.string.warning_contact_name_empty)
             } else {
                 val contact = Contact(id, name, 0)
 
@@ -61,8 +65,12 @@ class AddContactDialogFragment : DialogFragment() {
             }
         }
 
-        dialog?.findViewById<MaterialButton>(R.id.btn_cancel)?.setOnClickListener {
+        btnCancel?.setOnClickListener {
             dismiss()
+        }
+
+        txtContactName?.doOnTextChanged { _, _, _, _ ->
+            inputContactName?.error = ""
         }
     }
 
