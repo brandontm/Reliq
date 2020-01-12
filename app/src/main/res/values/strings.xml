@@ -9,4 +9,10 @@
     <string name="ask_discard_changes">Discard changes?</string>
     <string name="discard">Discard</string>
     <string name="delete_contact">Delete contact</string>
+    <string name="delete">Delete</string>
+    <string name="add_contact">Add contact</string>
+    <plurals name="confirm_delete_items">
+        <item quantity="one">Delete contact?</item>
+        <item quantity="other">Delete contacts?</item>
+    </plurals>
 </resources>

@@ -35,4 +35,8 @@ data class User constructor(
     fun addContact(contact: Contact) {
         contacts = contacts.toMutableList().apply { this.add(contact) }.toList()
     }
+
+    fun removeContact(contact: Contact) {
+        contacts = contacts.toMutableList().apply { this.remove(contact) }.toList()
+    }
 }

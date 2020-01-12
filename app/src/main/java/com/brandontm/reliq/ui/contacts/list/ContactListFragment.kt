@@ -18,9 +18,9 @@
 package com.brandontm.reliq.ui.contacts.list
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
@@ -31,7 +31,9 @@ import com.brandontm.reliq.data.model.entities.Contact
 import com.brandontm.reliq.data.model.entities.Result
 import com.brandontm.reliq.di.viewModel.ViewModelProviderFactory
 import com.brandontm.reliq.ui.contacts.add.AddContactDialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.contact_list_fragment.*
+import kotlinx.android.synthetic.main.layout_contact_card.*
 import javax.inject.Inject
 
 class ContactListFragment : BaseFragment() {
@@ -43,6 +45,11 @@ class ContactListFragment : BaseFragment() {
 
     private val adapter = ContactListAdapter()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -101,15 +108,78 @@ class ContactListFragment : BaseFragment() {
 
     private fun setupContactsRecyclerView() {
         rv_contacts.layoutManager = LinearLayoutManager(context)
-        adapter.onContactSelected = { contact ->
+
+        adapter.onContactClicked = { contact ->
             navigateToDetail(contact)
         }
+
+        adapter.onItemLongClick = { _, position ->
+            requireActivity().startActionMode(object : ActionMode.Callback {
+                override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+                    return false
+                }
+
+                override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+                    adapter.onItemSelectedChanged = { _, position, isSelected ->
+
+                        if(adapter.getSelectedItems().isEmpty()) {
+                            mode?.finish()
+                        } else {
+                            mode?.title = adapter.getSelectedItems().size.toString()
+                        }
+                    }
+
+                    adapter.isSelectable = true
+                    adapter.itemSwitchSelected(position)
+
+                    menu?.add("Delete")?.apply {
+                        icon = ContextCompat.getDrawable(
+                            requireContext(), R.drawable.ic_delete_24dp
+                        )?.apply { setTint(ContextCompat.getColor(requireContext(), android.R.color.white)) }
+
+                    }?.setOnMenuItemClickListener {
+                        mode?.let { getConfirmDeleteContactDialog(it).show() }
+                        true
+                    }
+                    fab_add_contact.hide()
+
+                    return true
+                }
+
+                override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+                    return false
+                }
+
+                override fun onDestroyActionMode(mode: ActionMode?) {
+                    adapter.isSelectable = false
+                    chk_selected.visibility = View.GONE
+
+                    fab_add_contact.show()
+                }
+
+            })
+        }
+
         swipe_contacts_refresh.setOnRefreshListener {
             viewModel.retrieveContacts()
         }
 
-
         rv_contacts.adapter = adapter
+    }
+
+    private fun getConfirmDeleteContactDialog(mode: ActionMode): AlertDialog {
+        return MaterialAlertDialogBuilder(requireContext())
+            .setTitle(
+                resources.getQuantityString(
+                    R.plurals.confirm_delete_items,
+                    adapter.getSelectedItems().size)
+            )
+            .setPositiveButton(R.string.delete) { _, _ ->
+                viewModel.deleteContacts(adapter.getSelectedItems().values.toList())
+                mode.finish()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
     }
 
     private fun showContactList() {

@@ -26,7 +26,20 @@ import com.brandontm.reliq.data.model.entities.Contact
 import kotlinx.android.synthetic.main.layout_contact_card.view.*
 
 class ContactListAdapter : RecyclerView.Adapter<ContactListAdapter.ViewHolder>() {
-    var onContactSelected: ((contact: Contact) -> Unit)? = null
+    var onContactClicked: ((contact: Contact) -> Unit)? = null
+    var onItemLongClick: ((item: Contact, position: Int) -> Unit)? = null
+    var onItemSelectedChanged: ((item: Contact, position: Int, isSelected: Boolean) -> Unit)? = null
+
+    var isSelectable: Boolean = false
+    set(value) {
+        field = value
+
+        if(!isSelectable) selectedItems.clear()
+
+        notifyDataSetChanged()
+    }
+    private val selectedItems: MutableMap<Int, Contact> = mutableMapOf()
+
     private var items = mutableListOf<Contact>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,20 +51,54 @@ class ContactListAdapter : RecyclerView.Adapter<ContactListAdapter.ViewHolder>()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder.itemView) {
-            card_contact.setOnClickListener {
-                onContactSelected?.invoke(items[position])
+            val contact = items[position]
+
+            chk_selected.isChecked = selectedItems.containsKey(position)
+            chk_selected.visibility =
+                if(isSelectable) View.VISIBLE
+                else View.GONE
+
+            card_contact.setOnLongClickListener {
+                if (onItemLongClick != null) {
+                    onItemLongClick?.invoke(contact, position)
+                    true
+                } else { false }
             }
-            lbl_contact_name.text = items[position].name
-            lbl_contact_score.text = "${items[position].score} <3"
+
+            card_contact.setOnClickListener {
+                if(isSelectable) {
+                    itemSwitchSelected(position)
+                } else onContactClicked?.invoke(contact)
+            }
+            lbl_contact_name.text = contact.name
+            lbl_contact_score.text = "${contact.score} <3"
         }
+    }
+
+    override fun getItemCount(): Int = items.size
+
+    fun getSelectedItems(): Map<Int, Contact> {
+        return selectedItems
+    }
+
+    fun itemSwitchSelected(position: Int) {
+        val contact = items[position]
+
+        if(selectedItems.containsKey(position)) {
+            selectedItems.remove(position)
+            onItemSelectedChanged?.invoke(contact, position, false)
+        } else {
+            selectedItems[position] = contact
+            onItemSelectedChanged?.invoke(contact, position, true)
+        }
+
+        notifyItemChanged(position)
     }
 
     fun updateItems(items: List<Contact>) {
         this.items = items.toMutableList()
         notifyDataSetChanged()
     }
-
-    override fun getItemCount(): Int = items.size
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
 }

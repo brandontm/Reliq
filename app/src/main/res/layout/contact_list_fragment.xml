@@ -28,8 +28,8 @@
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
                 android:paddingBottom="88dp"
-                tools:listitem="@layout/layout_contact_card"
-                tools:visibility="invisible" />
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/layout_contact_card" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:src="@drawable/ic_add_24dp"
-        android:contentDescription="submit"
+        android:contentDescription="@string/add_contact"
         android:layout_margin="16dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

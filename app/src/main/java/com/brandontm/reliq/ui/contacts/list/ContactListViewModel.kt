@@ -94,6 +94,17 @@ class ContactListViewModel @Inject constructor(private val userRepository: UserR
         }
     }
 
+    fun deleteContact(contact: Contact) {
+        user.value?.let {
+            it.removeContact(contact)
+            saveUser(it)
+        }
+    }
+
+    fun deleteContacts(contacts: List<Contact>) {
+        contacts.forEach { deleteContact(it) }
+    }
+
     private fun initSession() {
         userRepository.getUser()
             .subscribeOn(Schedulers.io())
