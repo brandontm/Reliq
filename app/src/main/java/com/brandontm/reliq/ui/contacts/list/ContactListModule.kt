@@ -15,25 +15,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.brandontm.reliq.di.main
+package com.brandontm.reliq.ui.contacts.list
 
 import androidx.lifecycle.ViewModel
+import com.brandontm.reliq.di.scopes.PerFragment
 import com.brandontm.reliq.di.viewModel.ViewModelKey
-import com.brandontm.reliq.ui.contacts.list.ContactListFragment
-import com.brandontm.reliq.ui.contacts.list.ContactListViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 
 @Module
-abstract class MainModule {
-
+abstract class ContactListModule {
     @ContributesAndroidInjector
+    @PerFragment
     internal abstract fun contributesContactListFragment(): ContactListFragment
 
     @Binds
     @IntoMap
     @ViewModelKey(ContactListViewModel::class)
+    @PerFragment
     internal abstract fun bindContactListViewModel(contactListViewModel: ContactListViewModel): ViewModel
 }

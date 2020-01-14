@@ -15,14 +15,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.brandontm.reliq.data.repository
+package com.brandontm.reliq.ui.contacts.detail
 
-import com.brandontm.reliq.data.model.entities.User
-import io.reactivex.Maybe
-import io.reactivex.Single
+import androidx.lifecycle.ViewModel
+import com.brandontm.reliq.di.scopes.PerFragment
+import com.brandontm.reliq.di.viewModel.ViewModelKey
+import dagger.Binds
+import dagger.Module
+import dagger.android.ContributesAndroidInjector
+import dagger.multibindings.IntoMap
 
-interface UserRepository {
-    fun getUser(): Maybe<User>
-    fun saveUser(user: User): Single<Long>
-    fun deleteUser(user: User): Single<Int>
+@Module
+abstract class ContactDetailModule {
+    @ContributesAndroidInjector
+    @PerFragment
+    internal abstract fun contributesContactDetailFragment(): DetailFragment
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DetailViewModel::class)
+    @PerFragment
+    internal abstract fun bindContactDetailViewModel(contactListViewModel: DetailViewModel): ViewModel
 }

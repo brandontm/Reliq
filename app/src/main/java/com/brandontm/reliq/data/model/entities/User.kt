@@ -30,4 +30,13 @@ data class User constructor(
     val _id: String,
     var name: String = "",
     @TypeConverters(ContactsConverter::class)
-    var contacts: List<Contact>)
+    var contacts: List<Contact>) {
+
+    fun addContact(contact: Contact) {
+        contacts = contacts.toMutableList().apply { this.add(contact) }.toList()
+    }
+
+    fun removeContact(contact: Contact) {
+        contacts = contacts.toMutableList().apply { this.remove(contact) }.toList()
+    }
+}
