@@ -45,11 +45,6 @@ class ContactListFragment : BaseFragment() {
 
     private val adapter = ContactListAdapter()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -60,12 +55,11 @@ class ContactListFragment : BaseFragment() {
         viewModel = ViewModelProviders.of(this, vmProviderFactory)
             .get(ContactListViewModel::class.java)
 
-        viewModel.user.observe(this) { // TODO: Move session to other activity/fragment
-            viewModel.retrieveContacts()
+        viewModel.retrieveContacts()
 
-            setupViews()
-            loadObservers()
-        }
+        setupViews()
+        loadObservers()
+
     }
 
     private fun loadObservers() {
@@ -120,7 +114,7 @@ class ContactListFragment : BaseFragment() {
                 }
 
                 override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-                    adapter.onItemSelectedChanged = { _, position, isSelected ->
+                    adapter.onItemSelectedChanged = { _, _, _ ->
 
                         if(adapter.getSelectedItems().isEmpty()) {
                             mode?.finish()

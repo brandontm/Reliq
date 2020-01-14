@@ -23,6 +23,8 @@ import com.brandontm.reliq.data.model.entities.Contact
 import com.brandontm.reliq.data.model.entities.Result
 import com.brandontm.reliq.data.model.entities.User
 import com.brandontm.reliq.data.repository.UserRepository
+import io.reactivex.Maybe
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
@@ -34,18 +36,35 @@ import javax.inject.Inject
 class ContactListViewModel @Inject constructor(private val userRepository: UserRepository)
     : BaseViewModel() {
 
-    val user: MutableLiveData<User> = MutableLiveData()
+    val user: MutableLiveData<Result<User>> = MutableLiveData()
     val contacts: MutableLiveData<Result<List<Contact>>> = MutableLiveData()
     val saveContactsStatus: MutableLiveData<Boolean> = MutableLiveData()
 
-    init {
-        initSession()
-    }
-
-    fun retrieveContacts() {
-        userRepository.getContacts()
+    private fun userObservable(): Single<User> =
+        userRepository.getUser()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .switchIfEmpty(Maybe.defer { createSession().toMaybe() })
+            .toSingle()
+
+
+    private val contactsObservable: Single<User> = userRepository.getUser()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .switchIfEmpty(Maybe.defer {
+            createSession().toMaybe() }
+        )
+        .toSingle()
+
+    fun retrieveContacts() {
+        userObservable()
+            .toObservable().compose { item ->
+                item.map {
+                    Result.success(it.contacts)
+                }
+                    .onErrorReturn { e -> Result.failure(e) }
+                    .startWith(Result.loading())
+            }
             .subscribeBy(
                 onNext = {
                     contacts.value = it
@@ -88,57 +107,42 @@ class ContactListViewModel @Inject constructor(private val userRepository: UserR
     }
 
     fun addContact(contact: Contact) {
-        user.value?.let {
-            it.addContact(contact)
-            saveUser(it)
-        }
+        userObservable().subscribeBy(
+            onSuccess = { user ->
+                user.addContact(contact)
+                saveUser(user)
+
+            },
+            onError = {
+                Timber.e(it, "Error adding contact")
+            }
+        ).addTo(disposables)
     }
 
     fun deleteContact(contact: Contact) {
-        user.value?.let {
-            it.removeContact(contact)
-            saveUser(it)
-        }
+        userObservable().subscribeBy(
+            onSuccess = { user ->
+                user.removeContact(contact)
+                saveUser(user)
+            },
+            onError = {
+                Timber.e(it, "Error deleting contact")
+            }
+        ).addTo(disposables)
     }
 
     fun deleteContacts(contacts: List<Contact>) {
         contacts.forEach { deleteContact(it) }
     }
 
-    private fun initSession() {
-        userRepository.getUser()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-                onSuccess = {
-                    user.value = it
-                },
-                onComplete = {
-
-                    createSession()
-
-                },
-                onError = {
-                    Timber.e(it, "Error retrieving user")
-                }
-            )
-            .addTo(disposables)
-    }
-
-    private fun createSession() {
+    private fun createSession(): Single<User> {
         val id: String = UUID.randomUUID().toString()
         val insertUser = User(id, "User", listOf())
-        userRepository.saveUser(insertUser)
+        return userRepository.saveUser(insertUser)
+            .compose { item ->
+                item.map { insertUser }
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-                onSuccess = {
-                    user.value = insertUser
-                },
-                onError = {
-                    Timber.e(it, "Error saving user $insertUser")
-                }
-            )
-            .addTo(disposables)
     }
 }
