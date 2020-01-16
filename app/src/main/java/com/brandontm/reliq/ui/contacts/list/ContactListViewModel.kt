@@ -120,19 +120,21 @@ class ContactListViewModel @Inject constructor(private val userRepository: UserR
     }
 
     fun deleteContact(contact: Contact) {
+        this.deleteContacts(listOf(contact))
+    }
+
+    fun deleteContacts(contacts: List<Contact>) {
         userObservable().subscribeBy(
             onSuccess = { user ->
-                user.removeContact(contact)
+                contacts.forEach { contact ->
+                    user.removeContact(contact)
+                }
                 saveUser(user)
             },
             onError = {
                 Timber.e(it, "Error deleting contact")
             }
         ).addTo(disposables)
-    }
-
-    fun deleteContacts(contacts: List<Contact>) {
-        contacts.forEach { deleteContact(it) }
     }
 
     private fun createSession(): Single<User> {
