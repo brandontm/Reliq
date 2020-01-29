@@ -28,6 +28,7 @@ import com.brandontm.reliq.data.model.entities.Contact
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
+import java.io.Serializable
 import java.util.*
 
 class AddContactDialogFragment : DialogFragment() {
@@ -39,6 +40,23 @@ class AddContactDialogFragment : DialogFragment() {
         ).setTitle("Add Contact")
             .setView(R.layout.add_contact_dialog_fragment)
             .create()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        if(listener != null)
+            outState.putSerializable("LISTENER", listener as Serializable)
+
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        if(savedInstanceState?.containsKey("LISTENER") == true) {
+
+            @Suppress("UNCHECKED_CAST")
+            listener =
+                savedInstanceState.getSerializable("LISTENER") as ((contact: Contact) -> Unit)?
+        }
+        super.onActivityCreated(savedInstanceState)
     }
 
     override fun onResume() {
